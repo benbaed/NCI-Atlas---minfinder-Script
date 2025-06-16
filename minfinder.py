@@ -216,15 +216,26 @@ def find_spline_minimum(energy_data):
     if not data:
         return None  # No valid data
 
-    data.sort()  # Ensure data is sorted by scaling factor
-    x = np.array([point[0] for point in data])  # Scaling factors
-    y = np.array([point[1] for point in data])  # Energies
+    # Filter out invalid energy values
+    filtered_data = [(x, y) for x, y in data if np.isfinite(y)]
 
-    if len(x) != len(set(x)):  # Check for duplicates
+    if len(filtered_data) < 3:
+        print(f"{system_id} has insufficient valid data points for spline interpolation.")
+        return None
+
+    filtered_data.sort()
+    x = np.array([point[0] for point in filtered_data])
+    y = np.array([point[1] for point in filtered_data])
+
+    if len(x) != len(set(x)):
         print(f"Error: Duplicate scaling factor found for system {system_id}")
         return None
 
-    spline = CubicSpline(x, y)
+    try:
+        spline = CubicSpline(x, y)
+    except ValueError as e:
+        print(f"{system_id} spline construction failed: {e}")
+        return None
 
     # Find the minimum by evaluating the derivative
     derivative = spline.derivative()
