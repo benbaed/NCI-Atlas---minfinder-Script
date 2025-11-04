@@ -2,7 +2,7 @@
 A python3 script to evaluate methods on the NCI Atlas Test sets called "minfinder.py"
 The NCI Atlas sets contain: HB300SPXx10, NCIA_D442x10, NCIA_HB375x10, NCIA_IHB100x10, NCIA_SH250x10
 
-For the script tp work, updated .res file versions have to be used in the given benchmark sets
+For the script to work, updated .res file versions have to be used in the given benchmark sets
 which enable to evaluation of multiple methods in subdirectories, as usually done for benchmark sets.
 These .res files are also provided in this repository (make sure to backup the original .res files!)
 
