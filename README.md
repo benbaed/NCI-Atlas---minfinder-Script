@@ -2,8 +2,8 @@
 A python3 script to evaluate methods on the NCI Atlas Test sets called "minfinder.py"
 The NCI Atlas sets contain: HB300SPXx10, NCIA_D442x10, NCIA_HB375x10, NCIA_IHB100x10, NCIA_SH250x10
 
-For the script tp work, updated .res file versions have to be used in the given benchmark sets
-which enable to evaluation of multiple methods in subdirectories, as usually done for benchmark sets.
+For the script to work, updated .res file versions have to be used in the given benchmark sets
+which enable the evaluation of multiple methods in subdirectories, as usually done for benchmark sets.
 These .res files are also provided in this repository (make sure to backup the original .res files!)
 
 Descripton of the script and its functionality:
@@ -14,7 +14,7 @@ Descripton of the script and its functionality:
         or python3 minfinder.py [method_name] -nosub 
     
     Description:
-      This script evaluates the ".res" file and evaluates the given PES scan data (either of ther reference or of a given method to evaluate).
+      This script evaluates the ".res" file and evaluates the given PES scan data (either of the reference or of a given method to evaluate).
       By fitting a spline function to the given datapoints, the script determines the interpolated minimum of the PES.
       It then computes the scaling factor for that given minimum. After determining the closest intermolecular distances in the dimer structures 
       (for scaling factor 1.0), the script then applies the determined minimum scaling factor to obtain a interpolated distance at which
