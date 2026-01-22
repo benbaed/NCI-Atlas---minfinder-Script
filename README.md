@@ -14,7 +14,7 @@ Descripton of the script and its functionality:
         or python3 minfinder.py [method_name] -nosub 
     
     Description:
-      This script evaluates the ".res" file and evaluates the given PES scan data (either of ther reference or of a given method to evaluate).
+      This script evaluates the ".res" file and evaluates the given PES scan data (either of the reference or of a given method to evaluate).
       By fitting a spline function to the given datapoints, the script determines the interpolated minimum of the PES.
       It then computes the scaling factor for that given minimum. After determining the closest intermolecular distances in the dimer structures 
       (for scaling factor 1.0), the script then applies the determined minimum scaling factor to obtain a interpolated distance at which
