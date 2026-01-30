@@ -26,6 +26,8 @@ Descripton of the script and its functionality:
       The script can read 'energy', 'orca.out' and 'xtb.out' files.
       If you want to reduce the amount of systems to evalaute, make a reduced version of the ".res" file. (Make sure to backup your .res file)
 
+     The results are automatically printed in files, excluding systems for which no minima could be found (see error messages)
+     
     Options:
       method_name       Evaluate the given method (e.g. g-xtb, gfn2-xtb, ...)   --> Prinout: systemid intermol_dist_PES_min_method    [in angstrom]
       ref               Evaluate the minima of the reference method             --> Prinout: systemid intermol_dist_PES_min_reference [in angstrom]
@@ -33,6 +35,7 @@ Descripton of the script and its functionality:
                         each system for the reference and the method
       -nosub            If the method results are not in subdirectories        
       -help             Show this help message and exit
+      -v                verbose mode (printout not only in file but also in console)              
 
 **! DISCLAIMER !**
 
