@@ -37,6 +37,7 @@ def print_help_page():
                         each system for the reference and the method
       -nosub            If the method results are not in subdirectories        
       -help             Show this help message and exit
+      -v                verbose mode (printout not only in file but also in console)
 
     """)
     sys.exit(0)
@@ -303,6 +304,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract and analyze energy values for each system.")
     parser.add_argument("method_name", nargs="+", type=str, help="Method name(s) (e.g., ref, g-xtb, etc.)")
     parser.add_argument("-nosub", action="store_true", help="Disable subfolder usage (use energy directly in folder).")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output: print numerical results to console.")
+
     args = parser.parse_args()
 
     # A dictionary to hold results for each method independently
@@ -361,21 +364,69 @@ if __name__ == "__main__":
                 scaled_distance = min_x * distance_data[system_id]  # Compute scaled distance
                 method_scaled_distances[method][system_id] = scaled_distance  # Store result
 
-#-------------------------------------- PRINT OUTS -----------------------------------------------------------------
-# Output the results based on the number of methods provided
+#-------------------------------------- OUTPUT FILE SETUP ----------------------------------------------------------
+
+output_file = None
+
 if len(args.method_name) == 1:
-    # For a single method, print system_id and the scaled distance for that method
-    for system_id in method_scaled_distances[args.method_name[0]].keys():
-        scaled_dist = method_scaled_distances[args.method_name[0]].get(system_id, "N/A")  # Get distance or "N/A"
-        print(system_id, f"{scaled_dist:.3f}")  # Print system_id and scaled distance with 3 decimal places
+    # Single-method mode
+    method = args.method_name[0]
+    output_file = open(f"min_{method}", "w")
 
 else:
-    # For multiple methods, print only the scaled distances, without system_id
-    system_ids = list(method_scaled_distances[args.method_name[0]].keys())  # Get list of system_ids
+    # Comparison mode
+    m1, m2 = args.method_name
+    output_file = open(f"min_{m1}_{m2}", "w")
+
+
+#-------------------------------------- PRINT OUTS -----------------------------------------------------------------
+
+# Single method case (the printed list does not include systems where the minima failed)
+if len(args.method_name) == 1:
+    method = args.method_name[0]
+
+    for system_id in method_scaled_distances[method]:
+        scaled_dist = method_scaled_distances[method][system_id]
+        line = f"{system_id} {scaled_dist:.3f}"
+
+        output_file.write(line + "\n")
+        if args.verbose:
+            print(line)
+    
+    print(f"the file \"min_{method}\" has been written")
+
+# Comparison of method to ref mode,  (the printed list does not include systems where the minima failed)
+else:
+    m1, m2 = args.method_name
+
+    system_ids = sorted(
+        set(method_results[m1]) | set(method_results[m2])
+    )
 
     for system_id in system_ids:
-        for method in args.method_name:
-            scaled_dist = method_scaled_distances[method].get(system_id, "N/A")  # Get distance or "N/A"
-            print(f"{scaled_dist:.3f}", end=" ")  # Print the scaled distance for the current method
-        print()  # Move to the next line after printing distances for all methods
+
+        missing = []
+        if system_id not in method_scaled_distances[m1]:
+            missing.append(m1)
+        if system_id not in method_scaled_distances[m2]:
+            missing.append(m2)
+
+        if missing:
+            print(f"skipping {system_id}...")
+            continue
+
+        d1 = method_scaled_distances[m1][system_id]
+        d2 = method_scaled_distances[m2][system_id]
+
+        line = f"{d1:.3f} {d2:.3f}"
+
+        output_file.write(line + "\n")
+        if args.verbose:
+            print(line)
+
+    print(f"the file \"min_ref_{method}\" has been written")
+
+# closing the file
+if output_file is not None:
+    output_file.close()
 
